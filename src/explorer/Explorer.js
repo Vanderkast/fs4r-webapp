@@ -1,112 +1,128 @@
 import React from "react";
 import "./Explorer.css";
-
-const serverUrl = "http://localhost:8080";
-const walkUrl = serverUrl + "/api/v1/main/walk";
-const downloadUrl = serverUrl + "/api/v1/main/download";
+import "../util/ProgressBar.css";
+import * as Api from "../Api";
+import { Breadcrumb, BreadcrumbItem } from "shards-react";
 
 class Explorer extends React.Component {
+  route = window.location.pathname.split("/");
+
   constructor(props) {
     super(props);
     this.state = {
-      err: null,
       loaded: false,
       content: [],
+      error: null,
     };
   }
 
   render() {
-    const { err, loaded, content } = this.state;
-    if (err)
+    const { loaded, content, error } = this.state;
+    if (error)
       return (
-        <div className="Explorer">
-          <p>err</p>
+        <div>
+          <Navigator />
+          <h>{error}</h>
         </div>
       );
-    else if (!loaded)
+    if (!loaded)
       return (
-        <div className="Explorer">
-          <p>Fetching folder content...</p>
-          <Loader />
+        <div>
+          <Navigator route={this.route} />
+          <div class="progress-line"></div>
         </div>
       );
     return (
-      <ul>
-        {content.map((item) => (
-          <Path key={item.id} name={item.name} dir={item.dir} />
-        ))}
-      </ul>
+      <div>
+        <Navigator route={this.route} />
+        <Content route={this.route} content={content}></Content>
+      </div>
     );
   }
 
-  componentDidMount() {
-    fetch(walkUrl + window.location.pathname)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            loaded: true,
-            content: result,
-          });
-        },
-        (error) => {
-          this.setState({
-            loaded: true,
-            err: error,
-          });
-        }
-      );
+  async componentDidMount() {
+    Api.walk(
+      this.route,
+      (content) =>
+        this.setState({ loaded: true, content: content, error: null }),
+      (error) =>
+        this.setState({
+          loaded: true,
+          content: [],
+          error: "Error occurred during loading. Status code: " + error,
+        })
+    );
   }
 }
 
-function Path(props) {
-  if (props.dir)
+function Navigator(props) {
+  const route = props.route.slice(1);
+  if (route.length === 1 && route[0] === "")
     return (
-      <li className="Path" key={props.key}>
-        <Dir name={props.name} />
-      </li>
+      <Breadcrumb>
+        <BreadcrumbItem>
+          <a href="/">Root</a>
+        </BreadcrumbItem>
+      </Breadcrumb>
     );
   return (
-    <li className="Path" key={props.key}>
-      <File name={props.name} />
-    </li>
+    <Breadcrumb>
+      <BreadcrumbItem>
+        <a href="/">Root</a>
+      </BreadcrumbItem>
+      {route.map((path, i) => (
+        <BreadcrumbItem>
+          <a href={"/" + route.slice(0, i + 1).join("/")}>{path}</a>
+        </BreadcrumbItem>
+      ))}
+    </Breadcrumb>
+  );
+}
+
+function Content(props) {
+  var content = props.content;
+  if (content.length === 0) return <h>Directory is empty!</h>;
+  return (
+    <ul>
+      {content.map((file) =>
+        file.dir ? (
+          <Directory name={file.name} />
+        ) : (
+          <File name={file.name} route={props.route} />
+        )
+      )}
+    </ul>
   );
 }
 
 function File(props) {
   return (
-    <div title="download file">
-      <a
-        name={props.name}
-        href={downloadUrl + window.location.pathname + '/' + props.name}
-      >
+    <li>
+      <div id="file">
+        {props.name}{" "}
+        <a
+          href={Api.downloadFile(props.route, props.name)}
+          className="gg-software-download"
+        ></a>
+      </div>
+    </li>
+  );
+}
+
+function Directory(props) {
+  return (
+    <li key={props.name}>
+      <a href={ref(props.name)} title="directory">
         {props.name}
       </a>
-    </div>
+    </li>
   );
 }
 
-function Dir(props) {
-  return (
-    <div>
-      <a
-        name={">>" + props.name}
-        href={
-          window.location.href.endsWith("/")
-            ? window.location.href + props.name
-            : window.location.href + "/" + props.name
-        }
-      >
-        {">>" + props.name}
-      </a>
-    </div>
-  );
-}
-
-class Loader extends React.Component {
-  render() {
-    return <div className="Loader"></div>;
-  }
+function ref(path) {
+  if (window.location.pathname.endsWith("/"))
+    return window.location.pathname + path;
+  return window.location.pathname + "/" + path;
 }
 
 export default Explorer;
