@@ -1,6 +1,7 @@
 import React from "react";
 import "./Explorer.css";
 import "../util/ProgressBar.css";
+import Logout from "../login/Logout";
 import * as Api from "../Api";
 import { Breadcrumb, BreadcrumbItem } from "shards-react";
 
@@ -23,19 +24,21 @@ class Explorer extends React.Component {
         <div>
           <Navigator />
           <h>{error}</h>
+          <Logout />
         </div>
       );
     if (!loaded)
       return (
         <div>
           <Navigator route={this.route} />
-          <div class="progress-line"></div>
+          <div class="progress-line"/>
         </div>
       );
     return (
       <div>
         <Navigator route={this.route} />
         <Content route={this.route} content={content}></Content>
+        <Logout />
       </div>
     );
   }
@@ -56,7 +59,7 @@ class Explorer extends React.Component {
 }
 
 function Navigator(props) {
-  const route = props.route.slice(1);
+  const route = props.route ? props.route.slice(1) : [];
   if (route.length === 1 && route[0] === "")
     return (
       <Breadcrumb>
