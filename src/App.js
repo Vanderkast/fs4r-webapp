@@ -3,9 +3,6 @@ import Explorer from "./explorer/Explorer";
 import Login from "./login/Login";
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     const creds = window.localStorage.getItem("creds");
