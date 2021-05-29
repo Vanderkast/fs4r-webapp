@@ -2,8 +2,9 @@ import React from "react";
 import "./Explorer.css";
 import "../util/ProgressBar.css";
 import Logout from "../login/Logout";
+import Content from "./FileView";
 import * as Api from "../Api";
-import { Breadcrumb, BreadcrumbItem } from "shards-react";
+import { Breadcrumb, BreadcrumbItem, Container, Row, Col } from "shards-react";
 
 class Explorer extends React.Component {
   route = window.location.pathname.split("/");
@@ -31,7 +32,7 @@ class Explorer extends React.Component {
       return (
         <div>
           <Navigator route={this.route} />
-          <div class="progress-line"/>
+          <div className="progress-line" />
         </div>
       );
     return (
@@ -80,52 +81,6 @@ function Navigator(props) {
       ))}
     </Breadcrumb>
   );
-}
-
-function Content(props) {
-  var content = props.content;
-  if (content.length === 0) return <h>Directory is empty!</h>;
-  return (
-    <ul>
-      {content.map((file) =>
-        file.dir ? (
-          <Directory name={file.name} />
-        ) : (
-          <File name={file.name} route={props.route} />
-        )
-      )}
-    </ul>
-  );
-}
-
-function File(props) {
-  return (
-    <li>
-      <div id="file">
-        {props.name}{" "}
-        <a
-          href={Api.downloadFile(props.route, props.name)}
-          className="gg-software-download"
-        ></a>
-      </div>
-    </li>
-  );
-}
-
-function Directory(props) {
-  return (
-    <li key={props.name}>
-      <a href={ref(props.name)} title="directory">
-        {props.name}
-      </a>
-    </li>
-  );
-}
-
-function ref(path) {
-  if (window.location.pathname.endsWith("/"))
-    return window.location.pathname + path;
-  return window.location.pathname + "/" + path;
 }
 
 export default Explorer;

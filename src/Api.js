@@ -1,5 +1,5 @@
 import axios from "axios";
-import {logout} from "./login/Logout";
+import { logout } from "./login/Logout";
 
 const base_url = "http://localhost:8080/api";
 
@@ -25,8 +25,27 @@ export async function walk(route, onDone, onError) {
 }
 
 export function downloadFile(route, file) {
-  const base = base_url + "/v1/main/download" + route.join("/");
-  return (base.endsWith("/") ? base : base + "/") + file;
+  return base_url + "/v1/main/download" + fileEndpoint(route, file);
+}
+
+function fileEndpoint(route, file) {
+  let _route = route.join("/");
+  return (_route.endsWith("/") ? _route : _route + "/") + file;
+}
+
+export async function read(route, filename, onDone, onError) {
+  await Api.get("v1/main/load" + fileEndpoint(route, filename), {
+    responseType: "text/plain",
+    crossdomain: true,
+    headers: {
+      Authorization: "Basic " + window.localStorage.getItem("creds"),
+    },
+  }).then(response => {
+    if (response.status === 200) onDone(response.data);
+  }).catch(error => {
+    if (error.message.includes("401")) logout();
+    onError(error.message);
+  })
 }
 
 export default Api;

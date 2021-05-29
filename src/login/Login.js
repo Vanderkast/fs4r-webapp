@@ -1,7 +1,6 @@
 import React from "react";
 import "./Login.css";
 import { Button, Form, FormGroup, FormInput, func } from "shards-react";
-import Api from "../Api";
 
 export default class Login extends React.Component {
   constructor(props) {
