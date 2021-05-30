@@ -1,16 +1,18 @@
 import React from "react";
 import "./Explorer.css";
 import "../util/ProgressBar.css";
-import Logout from "../login/Logout";
-import Content from "./FileView";
-import * as Api from "../Api";
-import { Breadcrumb, BreadcrumbItem, Container, Row, Col } from "shards-react";
+import Logout from "../login/Logout"
+import Content from "./FileView"
+import * as Api from "../Api"
+import Navigator from './Navigator'
+import { connect } from "react-redux";
 
-class Explorer extends React.Component {
-  route = window.location.pathname.split("/");
-
+class ExplorerView extends React.Component {
+  route;
+  
   constructor(props) {
     super(props);
+    this.route = props.route;
     this.state = {
       loaded: false,
       content: [],
@@ -59,28 +61,6 @@ class Explorer extends React.Component {
   }
 }
 
-function Navigator(props) {
-  const route = props.route ? props.route.slice(1) : [];
-  if (route.length === 1 && route[0] === "")
-    return (
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <a href="/">Root</a>
-        </BreadcrumbItem>
-      </Breadcrumb>
-    );
-  return (
-    <Breadcrumb>
-      <BreadcrumbItem>
-        <a href="/">Root</a>
-      </BreadcrumbItem>
-      {route.map((path, i) => (
-        <BreadcrumbItem>
-          <a href={"/" + route.slice(0, i + 1).join("/")}>{path}</a>
-        </BreadcrumbItem>
-      ))}
-    </Breadcrumb>
-  );
-}
+const Explorer = connect(state => ({ route: state.route}), null)(ExplorerView)
 
 export default Explorer;

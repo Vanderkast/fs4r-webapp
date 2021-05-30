@@ -1,6 +1,8 @@
 import React from "react";
 import "./Login.css";
 import { Button, Form, FormGroup, FormInput, func } from "shards-react";
+import { login } from '../state/actions'
+import { connect } from "react-redux";
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -9,6 +11,7 @@ export default class Login extends React.Component {
       username: null,
       password: null,
     };
+    this.login.bind(this);
   }
 
   render() {
@@ -35,9 +38,7 @@ export default class Login extends React.Component {
           </FormGroup>
         </Form>
         <div id="join-button">
-          <Button theme="success" onClick={() => this.login()}>
-            Join
-          </Button>
+          <Submit getCreds={this.login} />
         </div>
       </div>
     );
@@ -46,13 +47,8 @@ export default class Login extends React.Component {
   async login() {
     let username = document.getElementById("#username").value;
     let password = document.getElementById("#password").value;
-    this.setState({
-      username: username ? username : " ",
-      password: password ? password : " ",
-    });
     if (isValid(username) && isValid(password)) {
       window.localStorage.setItem("creds", btoa(username + ":" + password));
-      window.open(window.location.href, "_self");
     }
   }
 }
@@ -68,3 +64,21 @@ function StateFormInput(props) {
 function isValid(data) {
   return data && data !== " ";
 }
+
+const mapDispatchLoginOnClick = dispath => ({
+  onClick: () => dispath(login)
+})
+
+function SubmitButton({ onClick, getCreds }) {
+  return (
+    <Button theme="success"
+      onClick={() => {
+        getCreds();
+        onClick();
+      }}>
+      Join
+    </Button>
+  )
+}
+
+const Submit = connect(null, mapDispatchLoginOnClick)(SubmitButton)

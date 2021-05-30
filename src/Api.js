@@ -1,5 +1,5 @@
 import axios from "axios";
-import { logout } from "./login/Logout";
+import { deleteCreds } from "./login/Logout";
 
 const base_url = "http://localhost:8080/api";
 
@@ -19,7 +19,7 @@ export async function walk(route, onDone, onError) {
       if (response.status === 200) onDone(response.data);
     })
     .catch((response) => {
-      if (response.message.includes("401")) logout();
+      if (response.message.includes("401")) deleteCreds();
       onError(response.message);
     });
 }
@@ -43,7 +43,7 @@ export async function read(route, filename, onDone, onError) {
   }).then(response => {
     if (response.status === 200) onDone(response.data);
   }).catch(error => {
-    if (error.message.includes("401")) logout();
+    if (error.message.includes("401")) deleteCreds();
     onError(error.message);
   })
 }

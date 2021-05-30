@@ -1,7 +1,10 @@
 
 import React from "react";
+import { connect } from "react-redux";
 import { Container, Row, Col, Modal, ModalHeader, ModalBody } from "shards-react";
 import * as Api from "../Api";
+import store from '../state/store';
+import { appendRoute } from '../state/actions';
 import "./Explorer.css"
 
 export default function Content(props) {
@@ -71,18 +74,17 @@ class File extends React.Component {
   }
 }
 
-function Directory(props) {
+function Directory({ name }) {
   return (
     <Row >
       <Col className="directory-content">
-        <a href={ref(props.name)} title="directory">
-          {props.name}
+        <a onClick={() => store.dispatch(appendRoute(name))} title="directory">
+          {name}
         </a>
       </Col>
     </Row>
   );
 }
-
 function ref(path) {
   if (window.location.pathname.endsWith("/"))
     return window.location.pathname + path;
