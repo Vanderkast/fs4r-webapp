@@ -1,0 +1,9 @@
+button {
+    border: none;
+    color: royalblue;
+    transition-duration: 0.4s;
+}
+
+button:hover {
+    color: darkblue;
+}

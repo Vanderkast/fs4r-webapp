@@ -1,22 +1,18 @@
-import React from "react";
-import Explorer from "./explorer/Explorer";
-import Login from "./login/Login";
-import Modes from './state/modes'
-import { connect } from 'react-redux'
+import React from 'react'
+import { connect } from 'react-redux';
+import Login from './auth/Login'
+import Logout from './auth/Logout';
+import Explorer from './explorer2/Explorer';
 
-function AppView({ mode }) {
-  console.log(mode)
+function App({ logged }) {
+  if(!logged)
+    return  <Login />;
   return (
     <div>
-      {mode === Modes.MODE_LOGIN && !window.localStorage.getItem('creds') ? <Login /> : <Explorer />}
+      <Explorer />
+      <Logout />
     </div>
   )
-};
+}
 
-const mapProps = state => ({
-  mode: state.mode
-})
-
-const App = connect(mapProps, null)(AppView)
-
-export default App
+export default connect(state => ({ logged: state.login }))(App)
