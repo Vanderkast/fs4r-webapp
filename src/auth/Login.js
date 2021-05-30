@@ -1,17 +1,20 @@
 import React from "react";
 import "./Login.css";
-import { Button, Form, FormGroup, FormInput, func } from "shards-react";
-import { login } from '../state/actions'
+import { Button, Form, FormGroup, FormInput } from "shards-react";
+import { login } from '../util/auth'
 import { connect } from "react-redux";
 
-export default class Login extends React.Component {
+class Login extends React.Component {
+  dispatchLogin;
+
   constructor(props) {
     super(props);
+    console.log('login', props)
     this.state = {
       username: null,
       password: null,
     };
-    this.login.bind(this);
+    this.dispatchLogin = props.dispatchLogin
   }
 
   render() {
@@ -38,7 +41,10 @@ export default class Login extends React.Component {
           </FormGroup>
         </Form>
         <div id="join-button">
-          <Submit getCreds={this.login} />
+          <Button theme="success"
+            onClick={() => this.login()}>
+            Join
+          </Button>
         </div>
       </div>
     );
@@ -47,8 +53,13 @@ export default class Login extends React.Component {
   async login() {
     let username = document.getElementById("#username").value;
     let password = document.getElementById("#password").value;
+    this.setState({
+      username: username ? username : " ",
+      password: password ? password : " ",
+    });
     if (isValid(username) && isValid(password)) {
-      window.localStorage.setItem("creds", btoa(username + ":" + password));
+      login(username, password);
+      this.dispatchLogin();
     }
   }
 }
@@ -65,20 +76,6 @@ function isValid(data) {
   return data && data !== " ";
 }
 
-const mapDispatchLoginOnClick = dispath => ({
-  onClick: () => dispath(login)
-})
+const mapLoginProps = dispatch => ({dispatchLogin: () => dispatch({type: 'LOGIN'})})
 
-function SubmitButton({ onClick, getCreds }) {
-  return (
-    <Button theme="success"
-      onClick={() => {
-        getCreds();
-        onClick();
-      }}>
-      Join
-    </Button>
-  )
-}
-
-const Submit = connect(null, mapDispatchLoginOnClick)(SubmitButton)
+export default connect(null, mapLoginProps)(Login);

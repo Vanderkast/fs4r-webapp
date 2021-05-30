@@ -1,6 +1,5 @@
 
 import React from "react";
-import { connect } from "react-redux";
 import { Container, Row, Col, Modal, ModalHeader, ModalBody } from "shards-react";
 import * as Api from "../Api";
 import store from '../state/store';
