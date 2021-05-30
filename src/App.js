@@ -1,24 +1,22 @@
 import React from "react";
 import Explorer from "./explorer/Explorer";
 import Login from "./login/Login";
+import Modes from './state/modes'
+import { connect } from 'react-redux'
 
-class App extends React.Component {
+function AppView({ mode }) {
+  console.log(mode)
+  return (
+    <div>
+      {mode === Modes.MODE_LOGIN && !window.localStorage.getItem('creds') ? <Login /> : <Explorer />}
+    </div>
+  )
+};
 
-  render() {
-    const creds = window.localStorage.getItem("creds");
-    if (creds)
-      return (
-        <div>
-          <Explorer />
-        </div>
-      );
-    else
-      return (
-        <div>
-          <Login />
-        </div>
-      );
-  }
-}
+const mapProps = state => ({
+  mode: state.mode
+})
 
-export default App;
+const App = connect(mapProps, null)(AppView)
+
+export default App
