@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux';
 import { Container, Form } from 'shards-react';
 import FileView from './FileView';
@@ -8,12 +8,10 @@ import { walk } from '../util/api'
 import './ProgressBar.css'
 
 class DirContent extends React.Component {
-    route;
+    loadedPath;
 
     constructor(props) {
         super(props);
-        console.log('dir content', props)
-        this.route = props.route;
         this.state = {
             loaded: false,
             error: null,
@@ -23,7 +21,6 @@ class DirContent extends React.Component {
 
     render() {
         const { loaded, error, content } = this.state;
-
         if (!loaded)
             return <div className='progress-line'></div>
         if (error)
@@ -37,14 +34,30 @@ class DirContent extends React.Component {
                             dir={file.dir}
                             size={file.size}
                             created={file.created}
-                            modified={file.lastTimeModified} />)
+                            modified={file.lastTimeModified} 
+                            route={this.props.route} />)
                 }
             </Container>
         )
     }
 
-    componentWillMount() {
-        walk(this.route,
+    componentDidMount() {
+        this.walkDir();
+    }
+
+    componentDidUpdate() {
+        if (this.props.route !== this.loadedPath) {
+            this.walkDir();
+            this.setState({
+                loaded: false
+            })
+        }
+    }
+
+    walkDir() {
+        const route = this.props.route;
+        this.loadedPath = route;
+        walk(route,
             content => this.setState({
                 loaded: true,
                 error: null,
@@ -54,13 +67,14 @@ class DirContent extends React.Component {
                 loaded: true,
                 error,
                 content: null
-            }));
+            })
+        );
     }
 }
 
 const mapStateProps = state => {
     console.log('dir content map state', state)
-    return({ route: state.explorer.route })
+    return ({ route: state.explorer.route })
 };
 
 export default connect(mapStateProps)(DirContent);

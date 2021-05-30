@@ -12,7 +12,7 @@ const explorer = (state = initialState, action) => {
         case ACTION_APPEND_PATH:
             return {
                 route: [...state.route, action.path],
-                mode: action.mode ? MODE_EXPLORE : MODE_READ
+                mode: action.mode
             }
         case ACTION_UPDATE_ROUTE:
             return {

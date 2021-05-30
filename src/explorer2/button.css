@@ -1,7 +1,8 @@
 button {
+    background: none;
     border: none;
     color: royalblue;
-    transition-duration: 0.4s;
+    transition-duration: 0.3s;
 }
 
 button:hover {
