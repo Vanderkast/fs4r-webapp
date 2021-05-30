@@ -14,10 +14,11 @@ function ExplorerScreen({ route, mode }) {
 }
 
 function content(route, mode) {
+    // console.log('explorer content', mode)
     if (mode === MODE_EXPLORE)
         return <Content route={route}/>
     if (mode === MODE_READ)
-        <h>READ</h>
+        return <h>READ</h>
     return <h>UNSUPPORTED EXPLORER MODE!!!</h>
 }
 

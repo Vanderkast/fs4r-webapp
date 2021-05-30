@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { Breadcrumb, BreadcrumbItem } from 'shards-react'
 import { ACTION_UPDATE_ROUTE } from '../state/actions';
 
-import './Navigator.css'
+import './button.css'
 
 function Navigator(props) {
     console.log('navigator', props)
@@ -18,7 +18,7 @@ function Navigator(props) {
             {root(updateRoute)}
             {route.map((path, i) => (
                 <BreadcrumbItem>
-                    <button>{path}</button>
+                    <button onClick={() => updateRoute(route.slice(0, i + 1))}>{path}</button>
                 </BreadcrumbItem>
             ))}
         </Breadcrumb>
