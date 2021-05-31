@@ -1,91 +1,77 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { Row, Col } from 'shards-react'
+import { ACTION_APPEND_PATH } from '../state/actions';
+import { MODE_EXPLORE, MODE_READ } from '../state/explorerModes';
+import { download } from '../util/api';
 
-import React from "react";
-import { Container, Row, Col, Modal, ModalHeader, ModalBody } from "shards-react";
-import * as Api from "../Api";
-import store from '../state/store';
-import { appendRoute } from '../state/actions';
-import "./Explorer.css"
+import './FileView.css'
+import './button.css'
+import "../util/css/folder.css";
 
-export default function Content(props) {
-  var content = props.content;
-  if (content.length === 0) return <h>Directory is empty!</h>;
-  return (
-    <Container >
-      {content.map((file) =>
-        file.dir ? (
-          <Directory name={file.name} />
-        ) : (
-          <File name={file.name} route={props.route} />
-        )
-      )}
-    </Container>
-  );
+export default function FileView(props) {
+    const { name, dir, size, created, modified, route } = props;
+    if (dir)
+        return <OpenableDir name={name} />
+    return <OpenableFile name={name} size={size} created={created} modified={modified} route={route} />
 }
 
-class File extends React.Component {
-  info;
+const formatter = new Intl.DateTimeFormat('ru-RU');
 
-  constructor(props) {
-    super(props);
-    this.info = {
-      route: props.route,
-      name: props.name,
-      previewable: props.name.endsWith('.txt') && props.name.endsWith('text'),
-      created: props.created,
-      modified: props.modified
-    };
-    this.preview = this.preview.bind(this);
-    this.state = {
-      preview: false,
-      text: null
-    };
-  }
-
-  render() {
-    const { preview, text } = this.state;
-    const info = this.info;
+function File(props) {
+    const { name, size, created, modified, route } = props;
     return (
-      <Row className="directory-content">
-        <Col id="file" >
-          {info.name}
-        </Col>
-        <Col lg="1">
-          <a
-            href={Api.downloadFile(info.route, info.name)}
-            className="gg-software-download"
-          ></a>
-        </Col>
-        <Col lg="1">
-          <a className="gg-eye" onClick={() => this.preview()}></a>
-          <Modal open={preview} toggle={this.preview}>
-            <ModalHeader>{info.name}</ModalHeader>
-            <ModalBody>{text}</ModalBody>
-          </Modal>
-        </Col>
-      </Row>
-    );
-  }
-
-  preview() {
-    Api.read(this.info.route, this.info.name,
-      text => this.setState({ preview: !this.state.preview, text: text }),
-      err => alert(err))
-  }
+        <Row className="directory-content">
+            <Col>
+                <button onClick={() => props.read(name)}>{name}</button>
+            </Col>
+            <Col>size: {size}b</Col>
+            <Col title='created / modified'>
+                {formatter.format(new Date(created))} / {formatter.format(new Date(modified))}
+            </Col>
+            <Col>
+                <button className='gg-software-download' onClick={() => download(route, name)}/>
+            </Col>
+        </Row >
+    )
 }
 
-function Directory({ name }) {
-  return (
-    <Row >
-      <Col className="directory-content">
-        <a onClick={() => store.dispatch(appendRoute(name))} title="directory">
-          {name}
-        </a>
-      </Col>
-    </Row>
-  );
+const extentionPattern = '\\.txt$|\\.text$|\\.md$|\\.java$|\\css$|\\.js$|\\.json$';
+
+const mapFileDispatchProps = dispatch => ({
+    read: name => {
+        if (name.match(extentionPattern))
+            dispatch({
+                type: ACTION_APPEND_PATH,
+                mode: MODE_READ,
+                path: name
+            })
+        else
+            alert('Target file has incompatible type and can\'t be opened.')
+    }
+})
+
+const OpenableFile = connect(null, mapFileDispatchProps)(File)
+
+function Dir(props) {
+    const name = props.name;
+    return (
+        <Row className="directory-content">
+            <Col >
+                <button onClick={() => props.open(name)}>
+                    {name}
+                </button>
+            </Col>
+        </Row>
+    )
 }
-function ref(path) {
-  if (window.location.pathname.endsWith("/"))
-    return window.location.pathname + path;
-  return window.location.pathname + "/" + path;
-}
+
+const mapDirDispatchProps = dispath => ({
+    open: name => dispath({
+        type: ACTION_APPEND_PATH,
+        mode: MODE_EXPLORE,
+        path: name
+    })
+})
+
+const OpenableDir = connect(null, mapDirDispatchProps)(Dir)

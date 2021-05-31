@@ -1,34 +1,39 @@
-import { Breadcrumb, BreadcrumbItem } from 'shards-react'
-import { updateRoute } from '../state/actions'
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
+import { Breadcrumb, BreadcrumbItem } from "shards-react";
+import { ACTION_UPDATE_ROUTE } from "../state/actions";
 
-function NavigatorView({ route, onPathClick }) {
-    if (route.length === 1 && route[0] === "")
-        return (
-            <Breadcrumb>
-                <BreadcrumbItem>
-                    <a onClick={() => onPathClick([])}>Root</a>
-                </BreadcrumbItem>
-            </Breadcrumb>
-        );
-    return (
-        <Breadcrumb>
-            <BreadcrumbItem>
-                <a onClick={() => onPathClick([])}>Root</a>
-            </BreadcrumbItem>
-            {route.map((path, i) => (
-                <BreadcrumbItem>
-                    <a onClick={() => onPathClick(route.slice(0, i + 1))}>{path}</a>
-                </BreadcrumbItem>
-            ))}
-        </Breadcrumb>
-    );
+import "./button.css";
+
+function Navigator(props) {
+  const { route, updateRoute } = props;
+  if (route.length === 1 && route[0] === "")
+    return <Breadcrumb>{root(updateRoute)}</Breadcrumb>;
+  return (
+    <Breadcrumb>
+      {root(updateRoute)}
+      {route.map((path, i) => (
+        <BreadcrumbItem>
+          <button onClick={() => updateRoute(route.slice(0, i + 1))}>
+            {path}
+          </button>
+        </BreadcrumbItem>
+      ))}
+    </Breadcrumb>
+  );
 }
 
-const mapRoute = state => ({ route: state.route })
+const root = (updateRoute) => (
+  <BreadcrumbItem>
+    <button onClick={() => updateRoute([])}>Root</button>
+  </BreadcrumbItem>
+);
 
-const mapOnPathClick = ({
-    onPathClick: updateRoute
-})
+const mapDispatch = (dispatch) => ({
+  updateRoute: (route) =>
+    dispatch({
+      type: ACTION_UPDATE_ROUTE,
+      route: route,
+    }),
+});
 
-export default Navigator = connect(mapRoute, mapOnPathClick)(NavigatorView);
+export default connect(null, mapDispatch)(Navigator);
