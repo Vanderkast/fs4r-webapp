@@ -1,4 +1,4 @@
-import { combineReducers, createStore } from 'redux'
+import { createStore } from 'redux'
 import reducer from './reducer/index'
 
 const store = createStore(reducer)

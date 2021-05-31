@@ -1,6 +1,13 @@
 #logout-button  {
+    background-color: azure;
     color: #274259;
     position: absolute;
-    top: 2px;
+    bottom: 2px;
+    right: 2px;
+}
+
+footer {
+    position: fixed;
+    bottom: 2px;
     right: 2px;
 }

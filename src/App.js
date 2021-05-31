@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import Login from './auth/Login'
 import Logout from './auth/Logout';
-import Explorer from './explorer2/Explorer';
+import Explorer from './explorer/Explorer';
 
 function App({ logged }) {
   if(!logged)
