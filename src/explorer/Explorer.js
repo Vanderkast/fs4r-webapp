@@ -1,10 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
+
 import Navigator from './Navigator'
 import Content from './Content'
+
 import { MODE_EXPLORE, MODE_READ } from '../state/explorerModes'
 import { FileRead } from './FileRead'
+
 import './Explorer.css'
+
 
 function ExplorerScreen({ route, mode }) {
     return (
@@ -17,9 +21,9 @@ function ExplorerScreen({ route, mode }) {
 
 function content(route, mode) {
     if (mode === MODE_EXPLORE)
-        return <Content route={route}/>
+        return <Content route={route} />
     if (mode === MODE_READ)
-        return <FileRead route={route}/>
+        return <FileRead route={route} />
     return <h>UNSUPPORTED EXPLORER MODE!!!</h>
 }
 
