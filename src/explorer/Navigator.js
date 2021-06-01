@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { Breadcrumb, BreadcrumbItem } from "shards-react";
 import { ACTION_UPDATE_ROUTE } from "../state/actions";
 
-import "./button.css";
+import "../util/css/button.css";
 
 function Navigator(props) {
   const { route, updateRoute } = props;

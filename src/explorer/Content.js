@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Container } from "shards-react";
 import FileView from "./FileView";
+import UploadFile from './Upload'
 
 import { walk } from "../util/api";
 
@@ -36,6 +37,7 @@ class DirContent extends React.Component {
             route={this.props.route}
           />
         ))}
+        <UploadFile />
       </Container>
     );
   }

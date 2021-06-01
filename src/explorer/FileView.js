@@ -4,19 +4,20 @@ import { Row, Col } from 'shards-react'
 import { ACTION_APPEND_PATH } from '../state/actions';
 import { MODE_EXPLORE, MODE_READ } from '../state/explorerModes';
 import { download } from '../util/api';
+import 'datejs'
 
 import './FileView.css'
-import './button.css'
-import "../util/css/folder.css";
+import './directoryContent.css'
+import '../util/css/download.css'
+import '../util/css/button.css'
+import "../util/css/folder.css"
 
 export default function FileView(props) {
     const { name, dir, size, created, modified, route } = props;
     if (dir)
-        return <OpenableDir name={name} />
+        return <OpenableDir name={name} created={created} modified={modified} />
     return <OpenableFile name={name} size={size} created={created} modified={modified} route={route} />
 }
-
-const formatter = new Intl.DateTimeFormat('ru-RU');
 
 function File(props) {
     const { name, size, created, modified, route } = props;
@@ -25,12 +26,12 @@ function File(props) {
             <Col>
                 <button onClick={() => props.read(name)}>{name}</button>
             </Col>
-            <Col>size: {size}b</Col>
-            <Col title='created / modified'>
-                {formatter.format(new Date(created))} / {formatter.format(new Date(modified))}
+            <Col className='file-info'>{size} bytes</Col>
+            <Col className='file-info' title='created / modified'>
+                {new Date(created).toString('dd.MM.yy HH:mm')} / {new Date(modified).toString('dd.MM.yy HH:mm')}
             </Col>
-            <Col>
-                <button className='gg-software-download' onClick={() => download(route, name)}/>
+            <Col >
+                <button className='gg-software-download' onClick={() => download(route, name)} />
             </Col>
         </Row >
     )
@@ -54,13 +55,16 @@ const mapFileDispatchProps = dispatch => ({
 const OpenableFile = connect(null, mapFileDispatchProps)(File)
 
 function Dir(props) {
-    const name = props.name;
+    const { name, created, modified } = props;
     return (
         <Row className="directory-content">
             <Col >
                 <button onClick={() => props.open(name)}>
                     {name}
                 </button>
+            </Col>
+            <Col className='file-info' title='created / modified'>
+                {new Date(created).toString('dd.MM.yy HH:mm')} / {new Date(modified).toString('dd.MM.yy HH:mm')}
             </Col>
         </Row>
     )
