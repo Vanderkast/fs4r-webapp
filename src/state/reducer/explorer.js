@@ -7,6 +7,7 @@ const initialState = {
 };
 
 const explorer = (state = initialState, action) => {
+  console.log(state, action)
   switch (action.type) {
     case ACTION_APPEND_PATH:
       return {
@@ -14,16 +15,16 @@ const explorer = (state = initialState, action) => {
         mode: action.mode,
       };
     case ACTION_UPDATE_ROUTE: {
-      if (arrayEquals(action.route, state.route)) return {
-        route: action.route,
-        mode: state.mode
-      };
+      if (arrayEquals(action.route, state.route))
+        return {
+          route: action.route,
+          mode: state.mode
+        };
       return {
         route: action.route,
         mode: MODE_EXPLORE,
       };
     }
-
     default:
       return state;
   }

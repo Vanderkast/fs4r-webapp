@@ -21,9 +21,9 @@ function ExplorerScreen({ route, mode }) {
 
 function content(route, mode) {
     if (mode === MODE_EXPLORE)
-        return <Content route={route} />
+        return <Content />
     if (mode === MODE_READ)
-        return <FileRead route={route} />
+        return <FileRead />
     return <h>UNSUPPORTED EXPLORER MODE!!!</h>
 }
 

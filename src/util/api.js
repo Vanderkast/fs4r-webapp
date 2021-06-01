@@ -54,12 +54,12 @@ export async function read(route, onDone, onError) {
     .catch(pushError(onError));
 }
 
-export async function upload(route, file, overwrite = false, onDone, onError) {
+export async function upload(route, file, replace = false, onDone, onError) {
   var formData = new FormData();
   formData.append("attachment", file);
   let endpoint = fileEndpoint(route, file.name);
   api
-    .post('/v1/main/upload' + (endpoint.startsWith('/') ? endpoint : '/' + endpoint) + `?overwrite=${overwrite ? true : false}`, formData, {
+    .post('/v1/main/upload' + (endpoint.startsWith('/') ? endpoint : '/' + endpoint) + `?replace=${replace ? true : false}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: "Basic " + getCreds()

@@ -9,8 +9,6 @@ import './directoryContent.css'
 import '../util/css/upload.css'
 import '../util/css/button.css'
 
-
-
 class UploadFile extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +28,7 @@ class UploadFile extends React.Component {
   submit() {
     upload(this.props.route,
       this.state.file,
-      document.getElementById('overwrite').value,
+      document.getElementById('replace').checked,
       ignored => this.props.updateRoute(this.props.route),
       error => alert(error))
   }
@@ -40,7 +38,7 @@ class UploadFile extends React.Component {
       <Row className='directory-content'>
         <Col>Upload file</Col>
         <Col><input type='file' name='file' onChange={this.onFilePicked} /></Col>
-        <Col><input id='overwrite' type="checkbox" />overwrite</Col>
+        <Col><input id='replace' type="checkbox" /> replace if exists</Col>
         <Col>
           {
             this.state.file
@@ -59,7 +57,7 @@ const mapDispatchProps = (dispatch) => ({
     dispatch({
       type: ACTION_UPDATE_ROUTE,
       route: route,
-    }),
+    })
 });
 
 export default connect(mapStateProps, mapDispatchProps)(UploadFile);

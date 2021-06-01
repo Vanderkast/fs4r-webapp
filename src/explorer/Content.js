@@ -23,7 +23,8 @@ class DirContent extends React.Component {
 
   render() {
     const { loaded, error, content } = this.state;
-    if (!loaded) return <div className="progress-line"></div>;
+
+    if (!loaded || this.props.refresh) return <div className="progress-line"></div>;
     if (error) return <p className="error">{error}</p>;
     return (
       <Container>
@@ -76,6 +77,6 @@ class DirContent extends React.Component {
   }
 }
 
-const mapStateProps = state => ({ route: state.explorer.route });
+const mapStateProps = state => ({ route: state.explorer.route});
 
 export default connect(mapStateProps)(DirContent);
