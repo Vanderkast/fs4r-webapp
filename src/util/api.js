@@ -10,7 +10,7 @@ const api = axios.create({
 
 export async function walk(route, onDone, onError) {
   api
-    .get("/v1/main/walk/" + route.join("/"), {
+    .get("/v1/main/walk" + fileEndpoint(route), {
       responseType: "json",
       crossdomain: true,
       headers: {
@@ -43,7 +43,7 @@ export function download(route, file) {
 export async function read(route, onDone, onError) {
   console.log(route, onDone, onError)
   api
-    .get("/v1/main/load/" + route.join("/"), {
+    .get("/v1/main/load" + fileEndpoint(route), {
       responseType: "text/plain",
       crossdomain: true,
       headers: {
@@ -57,9 +57,9 @@ export async function read(route, onDone, onError) {
 export async function upload(route, file, replace = false, onDone, onError) {
   var formData = new FormData();
   formData.append("attachment", file);
-  let endpoint = fileEndpoint(route, file.name);
   api
-    .post('/v1/main/upload' + (endpoint.startsWith('/') ? endpoint : '/' + endpoint) + `?replace=${replace ? true : false}`, formData, {
+    .post('/v1/main/upload' + fileEndpoint(route, file.name) + `?replace=${replace ? true : false}&overwrite=true`,
+      formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: "Basic " + getCreds()
@@ -69,7 +69,27 @@ export async function upload(route, file, replace = false, onDone, onError) {
     .catch(pushError(onError))
 }
 
-function fileEndpoint(route, file) {
+export async function deleteFile(route, file, onDone, onError) {
+  api
+    .delete('/v1/main/delete' + fileEndpoint(route, file),
+      { headers: { Authorization: "Basic " + getCreds() } }
+    )
+    .then(_ => onDone())
+    .catch(pushError(onError))
+}
+
+export async function move({ origin, target, copy }, onDone, onError) {
+  api
+    .post('/v1/main/move' + fileEndpoint(origin.route, origin.file),
+      { target: fileEndpoint(target.route, target.file), copy: copy },
+      { headers: { Authorization: "Basic " + getCreds() } }
+    )
+    .then(_ => onDone())
+    .catch(pushError(onError))
+}
+
+function fileEndpoint(route, file = '') {
   let _route = route.join("/");
-  return (_route.endsWith("/") ? _route : _route + "/") + file;
+  _route = (_route.endsWith("/") ? _route : _route + "/") + file;
+  return _route.startsWith("/") ? _route : "/" + _route;
 }

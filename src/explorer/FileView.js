@@ -6,6 +6,9 @@ import { MODE_EXPLORE, MODE_READ } from "../state/explorerModes";
 import { download } from "../util/api";
 import "datejs";
 
+import DeleteFile from './DeleteFile'
+import Copy from './Copy'
+
 import "./FileView.css";
 import "./directoryContent.css";
 import "../util/css/download.css";
@@ -44,7 +47,7 @@ function File(props) {
         <button onClick={() => props.open(name)}>{name}</button>
       </Col>
       {actions}
-      <Col className="file-info">{pretty(size)} bytes</Col>
+      <Col className="file-info">{pretty(size)}</Col>
       <Col className="file-info" title="created / modified">
         {new Date(created).toString("dd.MM.yy HH:mm")} /{" "}
         {new Date(modified).toString("dd.MM.yy HH:mm")}
@@ -55,19 +58,23 @@ function File(props) {
 
 function fileActions(route, name) {
   return (
-    <Col>
+    <Col id='actions-container'>
       <button
-        className="gg-software-download"
+        className='gg-software-download'
         onClick={() => download(route, name)}
       />
+      <Copy file={name} />
+      <DeleteFile file={name} />
     </Col>
   );
 }
 
-function dirActions() {
+function dirActions(route, name) {
   return (
-    <Col >
-      <p className="file-info">no actions</p>
+    <Col id='actions-container'>
+      <p></p>
+      <Copy file={name} />
+      <DeleteFile />
     </Col>
   );
 }

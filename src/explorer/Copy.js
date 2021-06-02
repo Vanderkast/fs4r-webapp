@@ -1,11 +1,24 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-export function Copy(props) {
+import { doMove } from '../state/actions'
+
+import '../util/css/copy.css'
+import '../util/css/button.css'
+
+function Copy(props) {
+  const { route, file, doCopy } = props
   return (
-    <p></p>
+    <button className='gg-copy' onClick={() => doCopy({ route: route, file: file })} />
   )
 }
 
-export function Move(props) {
+const mapStateProps = state => ({
+  route: state.explorer.route
+})
 
-}
+const mapDispatchProps = dispatch => ({
+  doCopy: doMove(dispatch)
+})
+
+export default connect(mapStateProps, mapDispatchProps)(Copy)

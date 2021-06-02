@@ -18,7 +18,8 @@ const explorer = (state = initialState, action) => {
       if (arrayEquals(action.route, state.route))
         return {
           route: action.route,
-          mode: state.mode
+          mode: state.mode,
+          refresh: state.refresh ? ++state.refresh : 1
         };
       return {
         route: action.route,

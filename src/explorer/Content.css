@@ -3,3 +3,7 @@
     margin-top: 10px;
     margin-left: 10px;
 }
+
+#content-root {
+    max-width: 99%;
+}

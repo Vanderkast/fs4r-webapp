@@ -50,6 +50,6 @@ function textOf(text) {
         null,
         2
       )}`;
-  } catch (_) {}
+  } catch (_) { }
   return text;
 }

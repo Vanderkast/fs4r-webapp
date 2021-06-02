@@ -23,7 +23,7 @@ function content(route, mode) {
     if (mode === MODE_EXPLORE)
         return <Content />
     if (mode === MODE_READ)
-        return <FileRead />
+        return <FileRead route={route} />
     return <h>UNSUPPORTED EXPLORER MODE!!!</h>
 }
 
