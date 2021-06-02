@@ -1,9 +1,9 @@
 FROM node:16 as build
 WORKDIR /app
-COPY package.json yarn.lock /
+COPY package.json /
 RUN yarn
+RUN yarn upgrade
 COPY . .
-RUN yarn global add iltorb
 RUN yarn build
 
 FROM nginx:1.12-alpine

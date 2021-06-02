@@ -7,7 +7,6 @@ const initialState = {
 };
 
 const explorer = (state = initialState, action) => {
-  console.log(state, action)
   switch (action.type) {
     case ACTION_APPEND_PATH:
       return {
