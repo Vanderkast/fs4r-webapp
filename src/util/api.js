@@ -41,7 +41,6 @@ export function download(route, file) {
 }
 
 export async function read(route, onDone, onError) {
-  console.log(route, onDone, onError)
   api
     .get("/v1/main/load" + fileEndpoint(route), {
       responseType: "text/plain",

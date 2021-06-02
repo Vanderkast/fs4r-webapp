@@ -2,7 +2,7 @@ name: Publish Docker image
 
 on:
   release:
-    types: [ released ]
+    types: [released]
 
 jobs:
   push_to_registry:
@@ -25,5 +25,5 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/vanderkast/fs4r/fs4rwebapp:${{ github.sha }}
-            ghcr.io/vanderkast/fs4r/fs4rwebapp:latest
+            ghcr.io/vanderkast/fs4r-webapp/fs4rwebapp:${{ github.sha }}
+            ghcr.io/vanderkast/fs4r-webapp/fs4rwebapp:latest
