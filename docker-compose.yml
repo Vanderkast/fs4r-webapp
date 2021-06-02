@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  web-app:
+    container_name: fs4r_webapp
+    build: .
+    ports:
+      - "3000:80"
+  backend:
+    container_name: fs4r_service
+    image: ghcr.io/vanderkast/fs4r/fs4rservice:v1.0-dev.8
+    ports:
+      - "8080:8080"
