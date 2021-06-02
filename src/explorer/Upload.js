@@ -8,12 +8,14 @@ import { upload } from '../util/api'
 import './directoryContent.css'
 import '../util/css/upload.css'
 import '../util/css/button.css'
+import '../util/css/progressLine.css'
 
 class UploadFile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      file: null
+      file: null,
+      loading: false,
     }
     this.onFilePicked = this.onFilePicked.bind(this)
     this.submit = this.submit.bind(this)
@@ -26,17 +28,28 @@ class UploadFile extends React.Component {
   }
 
   submit() {
-    upload(this.props.route,
+    this.setState({
+      file: this.state.file,
+      loading: true,
+    })
+    upload(
+      this.props.route,
       this.state.file,
       document.getElementById('replace').checked,
-      ignored => this.props.updateRoute(this.props.route),
+      _ => this.props.updateRoute(this.props.route),
       error => alert(error))
+      .then(_ => this.setState({
+        file: this.state.file,
+        loading: false,
+      }))
   }
 
   render() {
+    if (this.state.loading)
+      return (<Row><Col><div className='progress-line' /></Col></Row>)
     return (
       <Row className='directory-content'>
-        <Col>Upload file</Col>
+        <Col > Upload file</Col >
         <Col><input type='file' name='file' onChange={this.onFilePicked} /></Col>
         <Col><input id='replace' type="checkbox" /> replace if exists</Col>
         <Col>
@@ -46,7 +59,7 @@ class UploadFile extends React.Component {
               : <p></p>
           }
         </Col>
-      </Row>
+      </Row >
     )
   }
 }

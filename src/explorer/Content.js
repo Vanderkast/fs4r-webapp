@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Container } from "shards-react";
+import Paste from "./Paste";
 import FileView from "./FileView";
 import UploadFile from './Upload'
 
@@ -11,9 +12,11 @@ import "./Content.css";
 
 class DirContent extends React.Component {
   loadedPath;
+  refresh;
 
   constructor(props) {
     super(props);
+    this.refresh = props.refresh;
     this.state = {
       loaded: false,
       error: null,
@@ -23,11 +26,11 @@ class DirContent extends React.Component {
 
   render() {
     const { loaded, error, content } = this.state;
-
-    if (!loaded || this.props.refresh) return <div className="progress-line"></div>;
+    console.log('path', this.props.route)
+    if (!loaded) return <div className="progress-line"></div>;
     if (error) return <p className="error">{error}</p>;
     return (
-      <Container>
+      <Container id='content-root'>
         {content.map((file) => (
           <FileView
             name={file.name}
@@ -39,6 +42,7 @@ class DirContent extends React.Component {
           />
         ))}
         <UploadFile />
+        <Paste />
       </Container>
     );
   }
@@ -48,11 +52,13 @@ class DirContent extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.props.route !== this.loadedPath) {
-      this.walkDir();
+    const version = this.props.refresh;
+    if (this.props.route !== this.loadedPath || this.refresh !== version) {
+      this.refresh = version;
       this.setState({
         loaded: false,
       });
+      this.walkDir();
     }
   }
 
@@ -65,7 +71,7 @@ class DirContent extends React.Component {
         this.setState({
           loaded: true,
           error: null,
-          content,
+          content: content,
         }),
       (error) =>
         this.setState({
@@ -77,6 +83,9 @@ class DirContent extends React.Component {
   }
 }
 
-const mapStateProps = state => ({ route: state.explorer.route});
+const mapStateProps = state => ({
+  route: state.explorer.route,
+  refresh: state.explorer.refresh
+});
 
 export default connect(mapStateProps)(DirContent);

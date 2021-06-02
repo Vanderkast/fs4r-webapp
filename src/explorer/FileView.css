@@ -1,3 +1,8 @@
 .file-info {
   font-size: 10pt;
 }
+
+#actions-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}

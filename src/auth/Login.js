@@ -65,16 +65,16 @@ class Login extends React.Component {
 
 function StateFormInput(props) {
   if (!props.data)
-    return <FormInput id={props.id} placeHolder={props.placeHolder} />;
+    return <FormInput id={props.id} placeHolder={props.placeHolder} type={props.type} />;
   if (props.data === " ")
-    return <FormInput invalid id={props.id} placeHolder={props.placeHolder} />;
-  return <FormInput valid id={props.id} placeHolder={props.placeHolder} />;
+    return <FormInput invalid id={props.id} placeHolder={props.placeHolder} type={props.type} />;
+  return <FormInput valid id={props.id} placeHolder={props.placeHolder} type={props.type} />;
 }
 
 function isValid(data) {
   return data && data !== " ";
 }
 
-const mapLoginProps = dispatch => ({dispatchLogin: () => dispatch({type: 'LOGIN'})})
+const mapLoginProps = dispatch => ({ dispatchLogin: () => dispatch({ type: 'LOGIN' }) })
 
 export default connect(null, mapLoginProps)(Login);
