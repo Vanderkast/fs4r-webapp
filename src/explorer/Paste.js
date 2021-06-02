@@ -20,7 +20,6 @@ class Paste extends React.Component {
   render() {
     const origin = this.props.origin;
     const loading = this.state.loading;
-    console.log('paste', this.props)
     if (!origin)
       return <Row className='directory-content'><Col>No file chosen to move</Col></Row>
     return (

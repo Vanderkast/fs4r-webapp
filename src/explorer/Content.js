@@ -26,7 +26,6 @@ class DirContent extends React.Component {
 
   render() {
     const { loaded, error, content } = this.state;
-    console.log('path', this.props.route)
     if (!loaded) return <div className="progress-line"></div>;
     if (error) return <p className="error">{error}</p>;
     return (
