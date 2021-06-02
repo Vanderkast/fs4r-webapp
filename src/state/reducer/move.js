@@ -1,4 +1,4 @@
-import { ACTION_MOVE, ACTION_PASTE } from "../actions";
+import { ACTION_MOVE, ACTION_PASTE, ACTION_FLUSH_MOVE } from "../actions";
 
 const initialState = {
   origin: null, // {route, file}
@@ -8,7 +8,6 @@ const initialState = {
 };
 
 const move = (state = initialState, action) => {
-  console.log('move', state, action);
   switch (action.type) {
     case ACTION_MOVE:
       return {
@@ -21,6 +20,8 @@ const move = (state = initialState, action) => {
         target: action.target,
         copy: action.copy,
       };
+    case ACTION_FLUSH_MOVE:
+      return initialState;
     default:
       return state;
   }
